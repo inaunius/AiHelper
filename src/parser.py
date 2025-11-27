@@ -5,13 +5,13 @@ import xml.etree.ElementTree as ET
 RSS_URL = "https://www.consultant.ru/rss/hotdocs.xml"
 
 
-def fetch_rss():
+def _fetch_rss() -> str:
     resp = requests.get(RSS_URL)
     resp.raise_for_status()
     return resp.text
 
 
-def parse_rss(xml_text):
+def _parse_rss(xml_text: str) -> list:
     root = ET.fromstring(xml_text)
     items = []
 
@@ -31,11 +31,11 @@ def parse_rss(xml_text):
     return items
 
 
-def create_connection(path):
+def _create_connection(path: str) -> sqlite3.Connection:
     return sqlite3.connect(path)
 
 
-def create_table(conn):
+def _create_table(conn):
     query = """
     CREATE TABLE IF NOT EXISTS law_changes (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -49,7 +49,7 @@ def create_table(conn):
     conn.commit()
 
 
-def insert_changes(conn, item):
+def _insert_changes(conn: sqlite3.Connection, item) -> None:
     query = """
     INSERT OR IGNORE INTO law_changes (title, url, date, description)
     VALUES (?, ?, ?, ?);
@@ -58,13 +58,13 @@ def insert_changes(conn, item):
     conn.commit()
 
 
-def parse_all_to_db():
-    conn = create_connection(r"laws.db")
-    create_table(conn)
+def parse_all_to_db() -> None:
+    conn = _create_connection(r"laws.db")
+    _create_table(conn)
 
-    xml_text = fetch_rss()
-    items = parse_rss(xml_text)
+    xml_text = _fetch_rss()
+    items = _parse_rss(xml_text)
 
     for item in items:
-        insert_changes(conn, item)
+        _insert_changes(conn, item)
         print("Добавлено:", item["title"])
