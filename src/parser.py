@@ -2,7 +2,7 @@ import requests
 import sqlite3
 import xml.etree.ElementTree as ET
 
-RSS_URL = "https://www.consultant.ru/rss/hotdocs.xml"
+from constant_configs import DB_PATH, RSS_URL
 
 
 def _fetch_rss() -> str:
@@ -59,7 +59,7 @@ def _insert_changes(conn: sqlite3.Connection, item) -> None:
 
 
 def parse_all_to_db() -> None:
-    conn = _create_connection(r"laws.db")
+    conn = _create_connection(DB_PATH)
     _create_table(conn)
 
     xml_text = _fetch_rss()
