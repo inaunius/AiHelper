@@ -5,6 +5,7 @@ from typing import List, Dict
 from deeppavlov import build_model, configs
 from constant_configs import *
 from gigachat import GigaChat
+from datetime import datetime
 
 DATA_TYPE = "DATE"
 ORG_TYPE = "ORG"
@@ -20,6 +21,13 @@ deep_pavlov_model = build_model(
 	download=True, 
 	install=True
 )
+
+def otchet(ghost: List[Dict]):
+	prompt = "Проведи анализ изменений содержания каждого закона сайта \"Консультант+ на основе данных:\"" + str(ghost)
+	crets = "MDE5YWZmMTEtODM3YS03MzY2LWE1MDEtYTdlYzE2NjMxMGE5OjI1Y2Q4NDE1LTNiMjctNDY5Zi05NDYyLWUzMjY1NjQ1MDliZg=="
+	with GigaChat(credentials = crets, verify_ssl_certs=False) as giga:
+		response = giga.chat(prompt)
+		return str(response.choices[0].message.content)
 
 def _ner_extract(text: str) -> List[Dict]:
 	entities = []
@@ -65,9 +73,9 @@ def _extract_key_changes(description: str, title: str) -> Dict:
 		"raw_entities": entities
 	}
 
-def _do_test_dump(changes: list) -> None:
-	with open("test_dump.json", "w", encoding="utf-8") as dump_file:
-		json.dump(changes, dump_file, indent=2)
+def saveOtchet(changes: str) -> None:
+	with open(f"analyze.txt", "w", encoding="utf-8") as dump_file:
+		dump_file.write(changes)
 
 def analyze_all():
 	connection = sqlite3.connect(DB_PATH)
@@ -87,4 +95,5 @@ def analyze_all():
 		})
 		print(f"ANALYZED: {title}")
 
-	_do_test_dump(changes)
+	
+	saveOtchet(otchet(changes))
