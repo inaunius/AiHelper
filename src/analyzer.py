@@ -1,5 +1,6 @@
 import sqlite3
 import requests
+import os
 import json
 from typing import List, Dict
 from deeppavlov import build_model, configs
@@ -12,9 +13,11 @@ ORG_TYPE = "ORG"
 LOC_TYPE = "LOC"
 LAW_TYPES = ("LAW", "NORMA", "MISC")
 
+
 UNKNOWN_TAG = "O"
 BEGIN_TAG_PREFIX = "B-"
 IN_TAG_PREFIX = "I-"
+GIGACHAT_API_KEY = "GIGACHAT_API_KEY"
 
 deep_pavlov_model = build_model(
 	configs.ner.ner_rus_bert, 
@@ -24,7 +27,7 @@ deep_pavlov_model = build_model(
 
 def otchet(ghost: List[Dict]):
 	prompt = "Проведи анализ изменений содержания каждого закона сайта \"Консультант+ на основе данных:\"" + str(ghost)
-	crets = "MDE5YWZmMTEtODM3YS03MzY2LWE1MDEtYTdlYzE2NjMxMGE5OjI1Y2Q4NDE1LTNiMjctNDY5Zi05NDYyLWUzMjY1NjQ1MDliZg=="
+	crets = os.environ.get(GIGACHAT_API_KEY)
 	with GigaChat(credentials = crets, verify_ssl_certs=False) as giga:
 		response = giga.chat(prompt)
 		return str(response.choices[0].message.content)
