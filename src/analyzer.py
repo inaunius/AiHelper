@@ -7,6 +7,7 @@ from deeppavlov import build_model, configs
 from constant_configs import *
 from gigachat import GigaChat
 from datetime import datetime
+from dotenv import load_dotenv
 
 DATA_TYPE = "DATE"
 ORG_TYPE = "ORG"
@@ -26,6 +27,8 @@ deep_pavlov_model = build_model(
 )
 
 def otchet(ghost: List[Dict]):
+	load_dotenv()
+
 	prompt = "Проведи анализ изменений содержания каждого закона сайта \"Консультант+ на основе данных:\"" + str(ghost)
 	crets = os.environ.get(GIGACHAT_API_KEY)
 	with GigaChat(credentials = crets, verify_ssl_certs=False) as giga:
