@@ -1,6 +1,7 @@
 import requests
 import sqlite3
 import xml.etree.ElementTree as ET
+from ftfy import fix_encoding
 
 from constant_configs import DB_PATH, RSS_URL
 
@@ -15,10 +16,10 @@ def _parse_rss(xml_text: str) -> list:
   root = ET.fromstring(xml_text)
   items = []
   for item in root.findall("./channel/item"):
-    title = item.find("title").text
-    link = item.find("link").text
-    pub_date = item.find("pubDate").text
-    description = item.find("description").text if item.find("description") is not None else ""
+    title = fix_encoding(item.find("title").text)
+    link = fix_encoding(item.find("link").text)
+    pub_date = fix_encoding(item.find("pubDate").text)
+    description = fix_encoding(item.find("description").text if item.find("description") is not None else "")
     items.append({
       "title": title,
       "url": link,

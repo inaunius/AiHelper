@@ -9,6 +9,7 @@ from gigachat import GigaChat
 from datetime import datetime
 from dotenv import load_dotenv
 
+
 DATA_TYPE = "DATE"
 ORG_TYPE = "ORG"
 LOC_TYPE = "LOC"
@@ -18,7 +19,6 @@ LAW_TYPES = ("LAW", "NORMA", "MISC")
 UNKNOWN_TAG = "O"
 BEGIN_TAG_PREFIX = "B-"
 IN_TAG_PREFIX = "I-"
-GIGACHAT_API_KEY = "GIGACHAT_API_KEY"
 
 deep_pavlov_model = build_model(
 	configs.ner.ner_rus_bert, 
@@ -26,11 +26,11 @@ deep_pavlov_model = build_model(
 	install=True
 )
 
-def otchet(ghost: List[Dict]):
+def _make_report(data: List[Dict]):
 	load_dotenv()
 
-	prompt = "Проведи анализ изменений содержания каждого закона сайта \"Консультант+ на основе данных:\"" + str(ghost)
-	crets = os.environ.get(GIGACHAT_API_KEY)
+	prompt = ANALYZE_PROMPT_BEGINNING + str(data)
+	crets = os.environ.get(GIGACHAT_TOKEN_KEY)
 	with GigaChat(credentials = crets, verify_ssl_certs=False) as giga:
 		response = giga.chat(prompt)
 		return str(response.choices[0].message.content)
@@ -102,4 +102,4 @@ def analyze_all():
 		print(f"ANALYZED: {title}")
 
 	
-	saveOtchet(otchet(changes))
+	saveOtchet(_make_report(changes))

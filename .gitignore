@@ -3,3 +3,6 @@ laws.db
 test_dump.json
 src/__pycache__/
 *.pyc
+.env
+laws.db
+analyze.txt
