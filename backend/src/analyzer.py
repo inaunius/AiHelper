@@ -38,7 +38,7 @@ def _make_report(data: List[Dict]) -> str:
 	}
 
 	response = requests.post(LOCAL_OLLAMA_URL, json=payload)
-	print("==============================================" + response.text)
+	print("ANSWERED: " + response.json()["response"])
 	return response.json()["response"]
 
 def _ner_extract(text: str) -> List[Dict]:
