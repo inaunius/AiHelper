@@ -33,6 +33,7 @@ def _make_report(data: List[Dict]) -> str:
 	payload = {
   	"model": "mistral:7b",
   	"prompt": prompt,
+		"system": "Ты - российский юрист. Ты отвечаешь только на русском.",
   	"stream": False
 	}
 

@@ -10,5 +10,5 @@ LOCAL_OLLAMA_URL = " http://localhost:11434/api/generate"
 
 RSS_URL = "https://www.consultant.ru/rss/hotdocs.xml"
 
-ANALYZE_PROMPT_BEGINNING = """Ты - российский юрист, русский по национальности и языку,с очень хорошо знающий русский язык и законы РФ. 
+ANALYZE_PROMPT_BEGINNING = """Ты - российский юрист, очень хорошо знающий русский язык и законы РФ. 
 Анализируй изменения в законах и кратко запиши их строго на русском языке:"""
