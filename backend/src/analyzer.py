@@ -26,14 +26,19 @@ deep_pavlov_model = build_model(
 	install=True
 )
 
-def _make_report(data: List[Dict]):
+def _make_report(data: List[Dict]) -> str:
 	load_dotenv()
 
-	prompt = ANALYZE_PROMPT_BEGINNING + str(data)
-	crets = os.environ.get(GIGACHAT_TOKEN_KEY)
-	with GigaChat(credentials = crets, verify_ssl_certs=False) as giga:
-		response = giga.chat(prompt)
-		return str(response.choices[0].message.content)
+	prompt = ANALYZE_PROMPT_BEGINNING + str(data)	
+	payload = {
+  	"model": "mistral:7b",
+  	"prompt": prompt,
+  	"stream": False
+	}
+
+	response = requests.post(LOCAL_OLLAMA_URL, json=payload)
+	print("==============================================" + response.text)
+	return response.json()["response"]
 
 def _ner_extract(text: str) -> List[Dict]:
 	entities = []
@@ -79,7 +84,7 @@ def _extract_key_changes(description: str, title: str) -> Dict:
 		"raw_entities": entities
 	}
 
-def saveOtchet(changes: str) -> None:
+def _save_report(changes: str) -> None:
 	with open(f"analyze.txt", "w", encoding="utf-8") as dump_file:
 		dump_file.write(changes)
 
@@ -102,4 +107,4 @@ def analyze_all():
 		print(f"ANALYZED: {title}")
 
 	
-	saveOtchet(_make_report(changes))
+	_save_report(_make_report(changes))
