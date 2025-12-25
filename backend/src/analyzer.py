@@ -31,7 +31,7 @@ def _make_report(data: List[Dict]) -> str:
 
 	prompt = ANALYZE_PROMPT_BEGINNING + str(data)	
 	payload = {
-    "model": "mistral:7b",
+    "model": os.getenv(LOCAL_OLLAMA_NAME_KEY),
     "prompt": prompt,
     "system": "Ты — российский юрист. Отвечай строго на русском языке. Игнорируй английский язык.",
     "stream": False,
@@ -40,7 +40,7 @@ def _make_report(data: List[Dict]) -> str:
 			}
   }
 
-	response = requests.post(LOCAL_OLLAMA_URL, json=payload)
+	response = requests.post(os.getenv(LOCAL_OLLAMA_URL_KEY), json=payload)
 	print("ANSWERED: " + response.json()["response"])
 	return response.json()["response"]
 
