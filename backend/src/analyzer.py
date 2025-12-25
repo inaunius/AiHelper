@@ -31,11 +31,14 @@ def _make_report(data: List[Dict]) -> str:
 
 	prompt = ANALYZE_PROMPT_BEGINNING + str(data)	
 	payload = {
-  	"model": "mistral:7b",
-  	"prompt": prompt,
-		"system": "Ты - российский юрист. Ты отвечаешь только на русском.",
-  	"stream": False
-	}
+    "model": "mistral:7b",
+    "prompt": prompt,
+    "system": "Ты — российский юрист. Отвечай строго на русском языке. Игнорируй английский язык.",
+    "stream": False,
+    "options": {
+        "temperature": 0.3
+			}
+  }
 
 	response = requests.post(LOCAL_OLLAMA_URL, json=payload)
 	print("ANSWERED: " + response.json()["response"])

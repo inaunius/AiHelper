@@ -1,5 +1,4 @@
 .venv/
-laws.db
 test_dump.json
 src/__pycache__/
 *.pyc
