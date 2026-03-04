@@ -1,0 +1,3 @@
+SHELL=/usr/bin/bash
+PATH=/sbin:/bin:/usr/sbin:/usr/bin
+00 * * * * aihelper cd /opt/aihelper/ && python3 ./backend/src/send.py
